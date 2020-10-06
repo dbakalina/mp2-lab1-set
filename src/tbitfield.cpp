@@ -9,9 +9,9 @@
 
 TBitField::TBitField(int len)
 {
-	if (0 <= len)
+	if (len <= 0)
 	{
-		throw();
+		throw "Incorrect value";
 	}
 	BitLen = len;
 	MemLen = BitLen / 32 + 1;
@@ -26,7 +26,7 @@ TBitField::TBitField(const TBitField &bf) // конструктор копиро
 {
 	BitLen = bf.BitLen;
 	MemLen = bf.MemLen;
-	pMem = new TELEM[bf.MemLen];
+	pMem = new TELEM[MemLen];
 	for (int i = 0; i < MemLen; i++)
 	{
 		pMem[i] = bf.pMem[i];
@@ -40,11 +40,19 @@ TBitField::~TBitField()
 
 int TBitField::GetMemIndex(const int n) const // индекс Мем для бита n
 {
+	if (n < 0 || n>BitLen - 1)
+	{
+		throw n;
+	}
 	return n / 32;
 }
 
 TELEM TBitField::GetMemMask(const int n) const // битовая маска для бита n
 {
+	if (n < 0 || n>BitLen - 1)
+	{
+		throw n;
+	}
 	int tmp = n % 32;
 	TELEM one = 1;
 	return one << tmp;
@@ -54,7 +62,7 @@ TELEM TBitField::GetMemMask(const int n) const // битовая маска дл
 
 int TBitField::GetLength(void) const // получить длину (к-во битов)
 {
-  return 0;
+	return BitLen;
 }
 
 void TBitField::SetBit(const int n) // установить бит
@@ -98,13 +106,13 @@ TBitField& TBitField::operator=(const TBitField &bf) // присваивание
 
 int TBitField::operator==(const TBitField &bf) const // сравнение
 {
-	if (MemLen != bf.MemLen)
+	if (BitLen != bf.BitLen)
 	{
 		return false;
 	}
 	for (int i = 0; i < MemLen; i++)
 	{
-		if (pMem[i] = bf.pMem[i])
+		if (pMem[i] != bf.pMem[i])
 		{
 			return false;
 		}
@@ -114,28 +122,46 @@ int TBitField::operator==(const TBitField &bf) const // сравнение
 
 int TBitField::operator!=(const TBitField &bf) const // сравнение
 {
-
-	return true;
+	if (BitLen != bf.BitLen)
+	{
+		return true;
+	}
+	for (int i = 0; i < MemLen; i++)
+	{
+		if (pMem[i] != bf.pMem[i]) 
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 TBitField TBitField::operator|(const TBitField &bf) // операция "или"
 {
+	TBitField res(10);
+	return res;
 }
 
 TBitField TBitField::operator&(const TBitField &bf) // операция "и"
 {
+	TBitField res(10);
+	return res;
 }
 
 TBitField TBitField::operator~(void) // отрицание
 {
+	TBitField res(10);
+	return res;
 }
 
 // ввод/вывод
 
 istream &operator>>(istream &istr, TBitField &bf) // ввод
 {
+	return istr;
 }
 
 ostream &operator<<(ostream &ostr, const TBitField &bf) // вывод
 {
+	return ostr;
 }
